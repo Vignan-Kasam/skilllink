@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hide Navbar for this page -->
+<style>
+  nav {
+    display: none !important;
+  }
+</style>
+
+<!-- Animated Video Background -->
+<video autoplay muted loop playsinline id="bg-video"
+  class="fixed top-0 left-0 w-full h-full object-cover z-0 opacity-75">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<!-- Page Container -->
+<div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-6">
+
+  <!-- Glass Card -->
+  <div class="glass-card p-8 w-full max-w-md rounded-2xl shadow-2xl border border-white/20 
+              backdrop-blur-2xl bg-white/15 hover:bg-white/20 transition duration-500">
+
+    <!-- Heading -->
+    <h2 class="text-4xl font-bold text-center mb-6 text-transparent bg-clip-text 
+               bg-gradient-to-r from-indigo-500 via-cyan-400 to-blue-500 drop-shadow-lg">
+      🔐 Login
+    </h2>
+
+    <!-- Form -->
+    <form method="POST" class="space-y-5">
+
+      <div>
+        <label for="email" class="block text-sm font-semibold text-gray-100 mb-1">Email</label>
+        <input type="email" name="email" id="email" required
+          class="w-full p-3 rounded-lg bg-white/25 text-white placeholder-gray-200 border border-white/30
+                 focus:ring-2 focus:ring-cyan-400 focus:outline-none" placeholder="Enter your email">
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-semibold text-gray-100 mb-1">Password</label>
+        <input type="password" name="password" id="password" required
+          class="w-full p-3 rounded-lg bg-white/25 text-white placeholder-gray-200 border border-white/30
+                 focus:ring-2 focus:ring-cyan-400 focus:outline-none" placeholder="Enter your password">
+      </div>
+
+      <!-- Submit -->
+      <div class="pt-3 text-center">
+        <button type="submit"
+          class="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-indigo-500 to-cyan-400
+                 hover:opacity-90 transform hover:scale-[1.02] transition-all duration-300">
+          Login
+        </button>
+      </div>
+    </form>
+
+    <!-- Register link -->
+    <p class="mt-6 text-center text-gray-300 text-sm">
+      Don’t have an account?
+      <a href="{{ url_for('register') }}" class="text-cyan-300 hover:text-cyan-100 transition">
+        Create one
+      </a>
+    </p>
+  </div>
+</div>
+
+<!-- GSAP Animation -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  gsap.from(".glass-card", { 
+    duration: 1.2, 
+    y: 60, 
+    opacity: 0, 
+    ease: "power4.out" 
+  });
+});
+</script>
+
+{% endblock %}

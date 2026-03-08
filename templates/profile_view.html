@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- 🌌 Background Video -->
+<video autoplay muted loop id="bgVideo">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<div class="profile-container">
+
+  <div class="profile-card">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      
+      <!-- ✅ Profile Picture -->
+      <img src="{{ url_for('static', filename='profile_pics/' + (user.profile_image or 'default_profile.png')) }}"
+           alt="Profile Picture" class="profile-image">
+
+      <h2 class="profile-name">{{ user.name }}</h2>
+
+      {% set avg = user.avg_rating() %}
+      {% set cnt = user.rating_count() %}
+      {% if avg %}
+      <p class="rating-stars">⭐ {{ avg }} <span class="review-count">({{ cnt }} reviews)</span></p>
+      {% else %}
+      <p class="rating-stars no-reviews-text">No ratings yet</p>
+      {% endif %}
+    </div>
+
+    <!-- ✅ Profile Details -->
+    <div class="profile-details" style="text-align:center;margin-top:15px;">
+      <p><strong>Skills:</strong> {{ user.skills or "Not Provided" }}</p>
+      <p><strong>Bio:</strong> {{ user.bio or "No Bio added." }}</p>
+      <p><strong>Aadhar:</strong> {{ user.aadhar }}</p>
+
+      <!-- ✅ Govt ID centered + styled -->
+      <div style="margin-top:20px;">
+        {% if user.govt_id_image %}
+            <img src="{{ url_for('static', filename='govt_ids/' + user.govt_id_image) }}"
+                 alt="Govt ID" class="govt-id-image"
+                 style="width:250px; border-radius:12px; border:3px solid #38bdf8; object-fit:cover;">
+        {% else %}
+            <p style="color:#ddd;">No Govt ID uploaded.</p>
+        {% endif %}
+      </div>
+
+      {% if current_user.id == user.id %}
+      <a href="{{ url_for('edit_profile') }}" class="edit-btn">✏️ Edit Profile</a>
+      {% endif %}
+    </div>
+
+    <hr class="divider">
+
+    <!-- ✨ Rate This User -->
+    {% if current_user.id != user.id %}
+    <div class="rating-form">
+      <h3 class="rating-title">Rate {{ user.name }}</h3>
+
+      <form action="{{ url_for('rate_user', user_id=user.id) }}" method="POST">
+        <label class="rating-label">Select Rating</label>
+          <select name="rating" class="rating-select">
+            <option disabled selected>Choose ⭐</option>
+              <option value="1">⭐ 1</option>
+              <option value="2">⭐⭐ 2</option>
+              <option value="3">⭐⭐⭐ 3</option>
+              <option value="4">⭐⭐⭐⭐ 4</option>
+              <option value="5">⭐⭐⭐⭐⭐ 5</option>
+          </select>
+
+
+        <textarea name="review" placeholder="Write a review (optional)" class="rating-textarea"></textarea>
+
+        <button type="submit" class="rating-submit-btn">Submit Rating</button>
+      </form>
+    </div>
+    {% endif %}
+
+    <hr class="divider">
+
+    <!-- ⭐ Reviews Section -->
+    <div class="reviews-section">
+      <h3>⭐ Reviews</h3>
+
+      {% if reviews %}
+        {% for r in reviews %}
+          <div class="review-card">
+            <p><strong>{{ r.author.name }}</strong> — ⭐ {{ r.score }}/5</p>
+            <p>{{ r.comment or "No comment" }}</p>
+            <p class="review-date">{{ r.created_at.strftime("%Y-%m-%d %H:%M") }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-reviews">No reviews yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- 💬 Chat Button -->
+    {% if current_user.id != user.id %}
+    <div class="chat-section">
+      <a href="{{ url_for('chat', user_id=user.id) }}" class="chat-btn">
+        💬 Chat with {{ user.name }}
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- 🌈 Styling -->
+<style>
+  /* Style the select dropdown */
+.rating-select {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  width: 100%;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+/* Style the options list */
+.rating-select option {
+  background: #0f172a; /* dark dropdown background */
+  color: #fff;         /* white text */
+  padding: 8px;
+}
+
+/* Highlight on hover in dropdown */
+.rating-select option:hover {
+  background: #38bdf8; /* cyan hover highlight */
+  color: #000;
+}
+
+/* When opened (Firefox fixes) */
+.rating-select:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+  .govt-id-image {
+    width: 250px;
+    height: auto;
+    border-radius: 12px;
+    border: 3px solid #38bdf8;   /* Sky blue border */
+    object-fit: cover;
+    display: block;              /* ✅ Allows margin auto */
+    margin: 15px auto;           /* ✅ Centers the image */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Optional clean shadow */
+}
+
+  .profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;       /* Make it circular */
+    object-fit: cover;        /* Crop & zoom correctly */
+    display: block;           /* Allows margin auto to work */
+    margin: 0 auto;           /* ✅ Centers the image */
+    border: 4px solid #ffffff; /* Optional clean border */
+}
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.profile-section {
+    text-align: center;
+}
+
+
+.profile-picture-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+  .edit-btn {
+    background: linear-gradient(to right, #28b2ed, #06717c) !important;
+    color: #111 !important;
+    font-weight: 600 !important;
+    padding: 8px 20px !important;
+    border-radius: 10px !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    transition: 0.3s ease !important;
+    margin-top: 10px !important;
+  }
+  .edit-btn:hover { transform: translateY(-2px) !important; background: #6eddff !important; }
+
+  #bgVideo { position: fixed; top:0; left:0; width:100vw; height:100vh; object-fit:cover; z-index:-1; filter:brightness(0.45) blur(2.5px); }
+
+  .profile-container { display:flex; justify-content:center; align-items:center; min-height:90vh; padding:2rem; }
+  .profile-card { background:rgba(255,255,255,0.12); border-radius:25px; padding:2.5rem; max-width:700px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,.4); backdrop-filter:blur(15px); color:#fff; text-align:center; }
+
+  .profile-image { width:160px; height:160px; border-radius:50%; border:4px solid #38bdf8; object-fit:cover; }
+  .profile-name { font-size:1.9rem; font-weight:700; background: linear-gradient(to right,#60a5fa,#22d3ee); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+  .rating-stars { margin-top:5px; font-size:1rem; color:#fde047; }
+  .no-reviews-text { color:#94a3b8; }
+
+  .rating-form { margin:1.5rem 0; text-align:left; }
+  .rating-select, .rating-textarea { width:100%; padding:.6rem; border-radius:10px; border:none; background:rgba(255,255,255,.15); color:white; }
+  .rating-submit-btn { width:100%; padding:.6rem; border-radius:10px; background:linear-gradient(to right,#22c55e,#10b981); color:white; font-weight:600; transition:.25s; }
+  .rating-submit-btn:hover { transform:translateY(-3px); }
+
+  .review-card { padding:10px; background:rgba(255,255,255,0.08); border-radius:10px; margin-top:10px; }
+  .chat-btn { background: linear-gradient(to right, #22c55e, #10b981); padding:12px 22px; border-radius:12px; color:white; font-weight:600; display:inline-block; transition:.3s; }
+  .chat-btn:hover { transform:translateY(-3px); }
+</style>
+
+{% endblock %}

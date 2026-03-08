@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  body {
+    background: #020617 !important;
+    font-family: "Poppins", sans-serif !important;
+    color: #f5f5f5 !important;
+    overflow-x: hidden;
+  }
+
+  #bg-video {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    opacity: 0.25 !important;
+    z-index: 0 !important;
+  }
+
+  .profile-wrapper {
+    position: relative !important;
+    z-index: 10 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100vh !important;
+  }
+
+  .profile-card {
+    background: rgba(10, 10, 10, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7) !important;
+    text-align: center !important;
+    width: 400px !important;
+    padding: 2.5rem !important;
+    backdrop-filter: blur(8px) !important;
+  }
+
+  .profile-card img.profile-pic {
+    width: 130px !important;
+    height: 130px !important;
+    border-radius: 50% !important;
+    border: 3px solid #facc15 !important;
+    box-shadow: 0 0 25px rgba(250, 204, 21, 0.4) !important;
+    object-fit: cover !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .profile-card h2 {
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+    background: linear-gradient(to right, #fde047, #facc15) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .edit-btn {
+    background: linear-gradient(to right, #facc15, #eab308) !important;
+    color: #111 !important;
+    font-weight: 600 !important;
+    padding: 8px 20px !important;
+    border-radius: 10px !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    transition: 0.3s ease !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .edit-btn:hover {
+    background: linear-gradient(to right, #fde047, #facc15) !important;
+    transform: translateY(-2px) !important;
+  }
+
+  .info {
+    text-align: left !important;
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .info b {
+    color: #facc15 !important;
+  }
+
+  .id-proof {
+    width: 100% !important;
+    border-radius: 10px !important;
+    margin-top: 0.5rem !important;
+    border: 1px solid #333 !important;
+  }
+
+  .reviews {
+    margin-top: 1.5rem !important;
+  }
+
+  .reviews h4 {
+    color: #facc15 !important;
+    margin-bottom: 0.5rem !important;
+    font-weight: 600 !important;
+  }
+
+  .reviews p {
+    color: #ccc !important;
+    font-size: 0.9rem !important;
+  }
+</style>
+
+<video autoplay muted loop playsinline id="bg-video">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<div class="profile-wrapper">
+  <div class="profile-card">
+    <img src="{{ url_for('static', filename='uploads/' ~ user.profile_image) }}" alt="Profile Image" class="profile-pic">
+    <h2>{{ user.name }}</h2>
+
+    <a href="{{ url_for('update_profile_page') }}" class="edit-btn">✏️ Edit Profile</a>
+
+    <div class="info">
+      <p><b>Skills:</b> {{ user.skills or "None" }}</p>
+      <p><b>Bio:</b> {{ user.bio or "No Bio added." }}</p>
+      <p><b>Aadhar:</b> {{ user.aadhar or "Not Provided" }}</p>
+      <p><b>Govt ID Proof:</b></p>
+      {% if user.govt_id_proof %}
+        <img src="{{ url_for('static', filename='uploads/' ~ user.govt_id_proof) }}" class="id-proof">
+      {% else %}
+        <p style="color:#777;">No Govt ID uploaded.</p>
+      {% endif %}
+    </div>
+
+    <div class="reviews">
+      <h4>⭐ Reviews</h4>
+      {% if reviews %}
+        {% for r in reviews %}
+          <p><b>{{ r.reviewer_name }}</b>: {{ r.comment }}</p>
+        {% endfor %}
+      {% else %}
+        <p>No reviews yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

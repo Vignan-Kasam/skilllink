@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Background Video -->
+<video autoplay muted loop id="bgVideo">
+  <source src="{{ url_for('static', filename='skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<style>
+/* Background Video Styling */
+#bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Page Layout */
+.content-wrapper {
+    background: rgba(0, 0, 0, 0.55);
+    min-height: 100vh;
+    padding: 50px 25px;
+    color: #fff;
+}
+
+/* Heading */
+h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+/* Table Design */
+table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+th, td {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+th {
+    background: rgba(0, 188, 212, 0.4);
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+td {
+    font-size: 1rem;
+    color: #f1f1f1;
+}
+
+/* Row hover */
+tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+/* Action links */
+a {
+    color: #00e6ff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #76ff03;
+}
+
+/* Status badges */
+td:nth-child(5) {
+    font-weight: bold;
+}
+</style>
+
+<div class="content-wrapper">
+  <h2>👥 Manage Users</h2>
+
+  <table>
+      <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Aadhar</th>
+          <th>Status</th>
+          <th>Actions</th>
+      </tr>
+
+      {% for u in users %}
+      <tr>
+          <td>{{ u.name }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.role }}</td>
+          <td>{{ u.aadhar }}</td>
+          <td>
+              {% if u.is_approved %}
+                  ✅ <span style="color:#76ff03;">Approved</span>
+              {% else %}
+                  ⏳ <span style="color:#ffeb3b;">Pending</span>
+              {% endif %}
+          </td>
+          <td>
+              {% if not u.is_approved %}
+                  <a href="{{ url_for('approve_user', user_id=u.id) }}">✅ Approve</a> |
+                  <a href="{{ url_for('reject_user', user_id=u.id) }}">🚫 Reject</a> |
+              {% endif %}
+              <a href="{{ url_for('delete_user', user_id=u.id) }}" 
+                 onclick="return confirm('Are you sure you want to delete this user?')">
+                 ❌ Delete
+              </a>
+          </td>
+      </tr>
+      {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

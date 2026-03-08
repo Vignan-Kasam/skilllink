@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block content %}
+<html>
+    <video autoplay muted loop id="bgVideo">
+  <source src="{{ url_for('static', filename='static/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+<div class="page-container">
+  <div class="form-wrapper">
+
+    <h2 class="page-title">💼 Post a Job</h2>
+    <p class="subtitle">Fill in the job details below to reach skilled workers quickly.</p>
+
+    <form method="POST" class="job-form">
+      <label>Job Title</label>
+      <input type="text" name="title" placeholder="Enter job title..." required>
+
+      <label>Description</label>
+      <textarea name="description" rows="5" placeholder="Describe the job responsibilities..." required></textarea>
+
+      <button type="submit" class="submit-btn">📢 Post Job</button>
+    </form>
+  </div>
+</div>
+
+<style>
+/* === Layout === */
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 90vh;
+  color: #1f2937;
+}
+
+.form-wrapper {
+  width: 85%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+  margin-top: 60px;
+  backdrop-filter: blur(6px);
+}
+
+/* === Titles === */
+.page-title {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #1e40af;
+  background: linear-gradient(to right, #2563eb, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #475569;
+  margin-bottom: 25px;
+}
+
+/* === Form Styling === */
+.job-form label {
+  display: block;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.job-form input,
+.job-form textarea {
+  width: 100%;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  transition: all 0.3s ease;
+  color: #1e293b;
+}
+
+.job-form input:focus,
+.job-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+  outline: none;
+}
+
+/* === Button === */
+.submit-btn {
+  display: block;
+  width: 100%;
+  background: linear-gradient(to right, #2563eb, #06b6d4);
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(to right, #3b82f6, #22d3ee);
+  transform: translateY(-2px);
+}
+</style>
+
+{% endblock %}
+</html>

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Background Video -->
+<video autoplay muted loop id="bgVideo">
+    <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<style>
+/* Background video styling */
+#bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Page layout */
+.content-wrapper {
+    background: rgba(0, 0, 0, 0.5);
+    min-height: 100vh;
+    padding: 50px 20px;
+    color: #fff;
+}
+
+/* Title */
+h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+/* Worker cards */
+.workers-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    justify-content: center;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.worker-card {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+}
+.worker-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* Worker image */
+.worker-card img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.worker-card .btn {
+    background: #00bcd4;
+    color: white;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+.worker-card .btn:hover {
+    background: #0097a7;
+}
+</style>
+
+<div class="content-wrapper">
+    <h2>👷 Available Workers</h2>
+
+    {% if workers %}
+    <div class="workers-container">
+        {% for w in workers %}
+        <div class="worker-card">
+            <img src="/static/profile/{{ w.profile_image }}" alt="Profile Image">
+            <h3>{{ w.name }}</h3>
+            <p><strong>Skills:</strong> {{ w.skills if w.skills else "Not Provided" }}</p>
+            <a href="{{ url_for('profile_view', user_id=w.id) }}" class="btn">View Profile</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align:center; font-size:1.2rem;">No workers available at the moment.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  /* ===== Background Video & Body ===== */
+  body {
+    background: #f1f5f9;
+    font-family: "Poppins", sans-serif;
+  }
+
+  #bg-video {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .applications-wrapper {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    padding: 4rem 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .applications-container {
+    width: 100%;
+    max-width: 900px;
+    background: #ffffffee;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(to right, #2563eb, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 2rem;
+  }
+
+  .app-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .app-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .app-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+  }
+
+  .app-card p {
+    color: #475569;
+    margin: 0.3rem 0;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    transition: 0.3s ease;
+  }
+
+  .btn-view {
+    background: linear-gradient(to right, #2563eb, #06b6d4);
+  }
+
+  .btn-approve {
+    background: linear-gradient(to right, #22c55e, #16a34a);
+  }
+
+  .btn-reject {
+    background: linear-gradient(to right, #ef4444, #dc2626);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  .no-apps {
+    text-align: center;
+    color: #64748b;
+    font-size: 1.1rem;
+    margin-top: 3rem;
+  }
+</style>
+
+<!-- ===== Background Video ===== -->
+<video autoplay muted loop playsinline id="bg-video">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<!-- ===== Applications Section ===== -->
+<div class="applications-wrapper">
+  <div class="applications-container">
+    <h2>📋 Job Applications</h2>
+
+    {% if applications %}
+      {% for app in applications %}
+        <div class="app-card">
+          <h3>{{ app.job.title }}</h3>
+          <p><b>Applicant:</b> {{ app.worker.name }}</p>
+          <p><b>Skills:</b> {{ app.worker.skills or "Not Provided" }}</p>
+          <p><b>Status:</b> 
+            <span style="
+              color: {% if app.status == 'applied' %}#2563eb
+                      {% elif app.status == 'approved' %}#16a34a
+                      {% elif app.status == 'rejected' %}#dc2626
+                      {% else %}#475569{% endif %};
+              font-weight:600;">
+              {{ app.status|capitalize }}
+            </span>
+          </p>
+
+          <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:10px;">
+            <a href="{{ url_for('profile_view', user_id=app.worker.id) }}" class="btn btn-view">👤 View Profile</a>
+
+            {% if app.status == 'applied' %}
+              <a href="{{ url_for('approve_user', user_id=app.worker_id) }}" class="btn btn-success">Approve</a>
+              <a href="{{ url_for('reject_user', user_id=app.worker_id) }}" class="btn btn-danger">Reject</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-apps">No job applications yet.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ===== GSAP Animation ===== -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  gsap.from(".applications-container", { 
+    duration: 1.2, 
+    y: 50, 
+    opacity: 0, 
+    ease: "power4.out"
+  });
+});
+</script>
+
+{% endblock %}

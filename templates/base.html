@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillLink | Digital Platform</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-dark: #0a0f1c;
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.25);
+      --primary: #7dd3fc;
+      --secondary: #818cf8;
+      --accent: #f97316;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+    }
+
+    /* Base Setup */
+    body {
+      background: radial-gradient(circle at top right, #0d1222 0%, #000814 100%);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* --- Dim floating background --- */
+    #bg-flow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: radial-gradient(circle at 20% 30%, rgba(129,140,248,0.15), transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(125,211,252,0.15), transparent 50%);
+      filter: blur(80px);
+      animation: flow 22s ease-in-out infinite alternate;
+      opacity: 0.6;
+    }
+
+    @keyframes flow {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-40px); }
+    }
+
+    /* --- Glass Card --- */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px) saturate(200%);
+      -webkit-backdrop-filter: blur(18px) saturate(200%);
+      border: 1px solid var(--glass-border);
+      border-radius: 1.25rem;
+      box-shadow: 0 0 25px rgba(255,255,255,0.08), 0 0 50px rgba(0,0,0,0.3);
+      transition: all 0.4s ease;
+    }
+
+    .glass-card:hover {
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 30px rgba(255,255,255,0.1), 0 0 60px rgba(79,70,229,0.25);
+      transform: translateY(-3px);
+    }
+
+    /* --- Navbar --- */
+    nav {
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(245,245,255,0.8) 100%);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border-radius: 1rem;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
+      transition: all 0.3s ease;
+    }
+
+    nav a {
+      color: #111827; /* dark gray for visibility */
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #2563eb;
+      background: rgba(37, 99, 235, 0.08);
+      text-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+    }
+
+    nav .glass-card {
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      color: #1e1e1e !important;
+      transition: 0.3s ease;
+    }
+    nav .glass-card:hover {
+      background: rgba(255, 255, 255, 0.45);
+      color: #000 !important;
+    }
+
+    nav .text-red-400 {
+      color: #dc2626 !important;
+      font-weight: 700;
+    }
+    nav .text-red-400:hover {
+      color: #b91c1c !important;
+    }
+
+    /* --- Toast --- */
+    #toast {
+      visibility: hidden;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 14px 24px;
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: var(--text);
+      box-shadow: 0 0 30px rgba(125,211,252,0.4);
+      opacity: 0;
+      z-index: 9999;
+      transition: 0.4s;
+    }
+
+    /* --- Cursor Glow --- */
+    #magic-cursor {
+      position: fixed;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      background: radial-gradient(circle, rgba(125,211,252,0.8) 0%, rgba(79,70,229,0.6) 60%, transparent 80%);
+      mix-blend-mode: color-dodge;
+      opacity: 0.75;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="bg-flow"></div>
+  <div id="magic-cursor"></div>
+
+  <main class="relative z-10">
+    <nav class="sticky top-0 z-50 p-4 flex justify-between items-center mx-auto max-w-7xl border border-white/10">
+  <h2 class="text-3xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400 drop-shadow-lg">
+    SkillLink
+  </h2>
+
+  <div class="flex items-center space-x-3 text-sm font-semibold">
+    {% if current_user.is_authenticated %}
+      
+      {% if current_user.role == 'client' %}
+        <a href="{{ url_for('client_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('find_workers') }}">Find Workers</a>
+
+      {% elif current_user.role == 'worker' %}
+        <a href="{{ url_for('worker_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('find_jobs') }}">Find Jobs</a>
+
+      {% elif current_user.role == 'admin' %}
+        <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+
+        <!-- ✅ NEW BUTTON → Manage Registered Users -->
+        <a href="{{ url_for('admin_users') }}">
+          Manage Users
+        </a>
+      {% endif %}
+
+      <a href="{{ url_for('chats') }}">Chat</a>
+
+      <a href="{{ url_for('notifications') }}" class="relative">
+        Notifications
+        {% if current_user.notifications and current_user.notifications > 0 %}
+        <span class="absolute -top-1 -right-2 w-4 h-4 text-xs bg-orange-600 rounded-full flex items-center justify-center text-white shadow-md">
+          {{ current_user.notifications }}
+        </span>
+        {% endif %}
+      </a>
+
+      <a href="{{ url_for('profile_view', user_id=current_user.id) }}" class="glass-card px-3 py-1 border border-white/10">Profile</a>
+      <a href="{{ url_for('logout') }}" class="text-red-400 hover:text-red-600">Logout</a>
+
+    {% else %}
+      <a href="{{ url_for('index') }}" class="text-cyan-600 hover:text-cyan-500">Login</a>
+      <a href="{{ url_for('register') }}" class="glass-card px-3 py-1 border border-white/10 hover:border-cyan-400 text-black hover:text-cyan-600">Register</a>
+    {% endif %}
+  </div>
+</nav>
+
+
+    <div class="p-6 sm:p-8 max-w-7xl mx-auto">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <div id="toast" class="glass-card"></div>
+
+  <script>
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.innerHTML = message;
+      gsap.fromTo(toast, { y: 0, opacity: 0, visibility: 'hidden' },
+                  { duration: 0.4, y: -20, opacity: 1, visibility: 'visible', ease: 'power3.out' });
+      setTimeout(() => {
+        gsap.to(toast, { duration: 0.4, y: 0, opacity: 0, visibility: 'hidden', ease: 'power3.in' });
+      }, 2500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const cursor = document.getElementById('magic-cursor');
+      window.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.2, ease: 'power2.out' });
+      });
+      gsap.from('nav', { y: -100, opacity: 0, duration: 1.2, ease: 'power4.out' });
+    });
+  </script>
+</body>
+</html>

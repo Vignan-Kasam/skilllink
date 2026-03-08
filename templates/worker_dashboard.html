@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- 🌌 Background Video -->
+<video autoplay muted loop id="bgVideo">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<h2 class="page-title">👷 Worker Dashboard</h2>
+
+<!-- 🔍 Search Jobs Button -->
+<div class="center-btn">
+  <a href="{{ url_for('find_jobs') }}" class="search-btn">🔍 Search Jobs</a>
+</div>
+
+<hr class="divider">
+
+{% if hired_clients %}
+  <div class="clients-container">
+    {% for client, job in hired_clients %}
+    <div class="client-card">
+      <div class="client-info">
+        <img src="{{ url_for('static', filename='uploads/' ~ client.profile_image) if client.profile_image else url_for('static', filename='images/default_profile.png') }}" 
+             class="client-img" alt="Client Image">
+        <h4>{{ client.name }}</h4>
+      </div>
+
+      <p><b>Job:</b> {{ job.title }}</p>
+
+      <a href="{{ url_for('chat', user_id=client.id) }}" class="chat-btn">💬 Chat</a>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="no-data">No clients have hired you yet.</p>
+{% endif %}
+
+<!-- 🌈 Styling -->
+<style>
+/* === Background Video === */
+#bgVideo {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  filter: brightness(0.35) blur(3px);
+}
+
+/* === Titles === */
+.page-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #22d3ee, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 1.5rem 0;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #facc15;
+  margin-bottom: 1.2rem;
+}
+
+.divider {
+  width: 80%;
+  margin: 1.5rem auto;
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* === Centered Search Button === */
+.center-btn {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.search-btn {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  background: linear-gradient(to right, #38bdf8, #2563eb);
+  color: white;
+  text-decoration: none;
+  transition: 0.3s ease;
+  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
+}
+
+.search-btn:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(to right, #60a5fa, #22d3ee);
+}
+
+/* === Clients Grid === */
+.clients-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.5rem;
+  padding: 0 2rem 3rem;
+}
+
+/* === Card === */
+.client-card {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 1.5rem;
+  color: #fff;
+  backdrop-filter: blur(15px);
+  text-align: center;
+  transition: 0.3s ease;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
+}
+
+.client-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 45px rgba(56, 189, 248, 0.5);
+}
+
+/* === Client Image === */
+.client-img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+  margin-bottom: 0.6rem;
+  object-fit: cover;
+}
+
+/* === Info === */
+.client-info h4 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* === Chat Button === */
+.chat-btn {
+  display: inline-block;
+  padding: 10px 18px;
+  background: linear-gradient(to right, #10b981, #22c55e);
+  border-radius: 10px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 0.8rem;
+  transition: 0.3s ease;
+}
+
+.chat-btn:hover {
+  background: linear-gradient(to right, #34d399, #16a34a);
+  transform: translateY(-3px);
+}
+
+/* === No Data Message === */
+.no-data {
+  text-align: center;
+  color: #cbd5e1;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+}
+</style>
+
+{% endblock %}

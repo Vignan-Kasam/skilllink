@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- 🎥 Background Video -->
+<video autoplay muted loop playsinline id="bgVideo">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<div class="page-wrapper">
+  <div class="content-box">
+    <h2 class="page-title">🔍 Find Jobs</h2>
+
+    <!-- 🔎 Search Bar -->
+    <form method="GET" class="search-form">
+      <input type="text" name="search" placeholder="Search job..." value="{{ search }}" class="form-control search-input">
+      <button type="submit" class="btn-search">Search</button>
+    </form>
+
+    <!-- 🧾 Job Listings -->
+    {% if jobs %}
+      {% for job in jobs %}
+      <div class="job-card">
+        <h3>{{ job.title }}</h3>
+        <p><strong>Description:</strong> {{ job.description }}</p>
+        <p><strong>Posted By:</strong> {{ job.client.name }}</p>
+
+        {% if job.id in applied_job_ids %}
+          <button disabled class="btn-disabled">✅ Applied</button>
+        {% else %}
+          <button class="apply-btn" data-job="{{ job.id }}">Apply</button>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-data">No jobs available at the moment.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ✅ Popup Notification -->
+<div id="popup" class="popup">✅ Application Sent!</div>
+
+<script>
+document.querySelectorAll('.apply-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    let jobId = this.getAttribute('data-job');
+    let button = this;
+    button.innerText = "Applying...";
+    button.disabled = true;
+
+    fetch(`/apply/${jobId}`, { method: "POST" })
+      .then(res => res.text())
+      .then(() => {
+        button.innerText = "✅ Applied";
+        button.classList.add('btn-disabled');
+        let popup = document.getElementById("popup");
+        popup.style.right = "20px";
+        setTimeout(() => { popup.style.right = "-300px"; }, 2000);
+      })
+      .catch(() => {
+        alert("❌ Error applying. Try again.");
+        button.innerText = "Apply";
+        button.disabled = false;
+      });
+  });
+});
+</script>
+
+<style>
+/* 🎥 Background Video */
+#bgVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  filter: brightness(0.45);
+}
+
+/* 🧊 Page Layout */
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.content-box {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  width: 90%;
+  max-width: 800px;
+  padding: 35px;
+  color: #fff;
+  animation: fadeIn 1s ease;
+}
+
+/* 🔠 Title */
+.page-title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 25px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+/* 🔍 Search Bar */
+.search-form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+.search-input {
+  width: 70%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+.btn-search {
+  margin-left: 10px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #00bcd4, #0097a7);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-search:hover {
+  transform: scale(1.05);
+}
+
+/* 🧾 Job Cards */
+.job-card {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  color: #fff;
+  transition: 0.3s ease;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.25);
+}
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 5px 25px rgba(0,0,0,0.35);
+}
+
+/* 🟢 Buttons */
+.apply-btn {
+  background: linear-gradient(90deg, #2ecc71, #27ae60);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+}
+.apply-btn:hover {
+  transform: scale(1.05);
+}
+.btn-disabled {
+  background: gray !important;
+  cursor: not-allowed;
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
+/* ✅ Popup */
+.popup {
+  position: fixed;
+  top: 20px;
+  right: -300px;
+  background: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  transition: 0.4s;
+  z-index: 9999;
+}
+
+/* 🚫 No Data */
+.no-data {
+  text-align: center;
+  font-size: 18px;
+  color: #eee;
+  margin-top: 20px;
+}
+
+/* ✨ Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+{% endblock %}

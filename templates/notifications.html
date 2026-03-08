@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ===== Navbar (same as dashboard) ===== -->
+<style>
+  nav {
+    background: linear-gradient(to right, #ffffff, #f8fafc) !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  nav .nav-container a {
+    color: #1e293b !important;
+    font-weight: 600;
+  }
+
+  nav .nav-container a:hover {
+    color: #2563eb !important;
+  }
+
+  nav .brand {
+    background: linear-gradient(to right, #2563eb, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>
+
+<!-- ===== Background Video ===== -->
+<video autoplay muted loop playsinline id="bg-video"
+  class="fixed top-0 left-0 w-full h-full object-cover z-0 opacity-55">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<!-- ===== Notifications Container ===== -->
+<div class="relative z-10 min-h-screen px-6 py-24 flex flex-col items-center">
+
+  <!-- Header -->
+  <div class="text-center mb-12">
+    <h2 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-cyan-400 to-blue-500">
+      🔔 Notifications
+    </h2>
+    <p class="text-gray-100 mt-2">Stay updated with all your recent activities and alerts.</p>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="w-full max-w-4xl bg-white/95 p-8 rounded-2xl shadow-xl border border-gray-200">
+
+    {% if notifications %}
+      <ul class="space-y-4 list-none pl-0">
+        {% for n in notifications %}
+          <li class="p-5 rounded-xl border border-gray-200 flex justify-between items-start shadow-md hover:bg-gray-50 transition duration-300 {% if not n.is_read %}bg-indigo-50{% else %}bg-white{% endif %}">
+            <div class="flex items-start gap-3">
+              {% if not n.is_read %}
+                <span class="text-indigo-600 text-lg">🔔</span>
+              {% else %}
+                <span class="text-gray-400 text-lg">📨</span>
+              {% endif %}
+              <div>
+                <p class="text-gray-800 font-medium">{{ n.message }}</p>
+                {% if not n.is_read %}
+                  <p class="text-xs text-indigo-500 font-semibold mt-1">New</p>
+                {% endif %}
+              </div>
+            </div>
+
+            <a href="{{ url_for('mark_notification_read', notification_id=n.id) }}"
+               class="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-cyan-400 hover:opacity-90 transition">
+              Mark Read
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-gray-200 text-center text-lg">No notifications yet.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ===== GSAP Animation ===== -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  gsap.from(".w-full li", { 
+    duration: 1, 
+    y: 40, 
+    opacity: 0, 
+    ease: "power3.out", 
+    stagger: 0.15 
+  });
+});
+</script>
+
+{% endblock %}

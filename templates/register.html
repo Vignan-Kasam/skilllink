@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hide Navbar for this page -->
+<style>
+  nav {
+    display: none !important;
+  }
+</style>
+
+<!-- Animated Video Background -->
+<video autoplay muted loop playsinline id="bg-video"
+  class="fixed top-0 left-0 w-full h-full object-cover z-0 opacity-75">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<!-- Form Container -->
+<div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-6">
+  
+  <!-- Glass Card -->
+  <div class="glass-card p-8 w-full max-w-lg shadow-2xl border border-white/20 rounded-2xl 
+              backdrop-blur-2xl bg-white/15 hover:bg-white/20 transition duration-500">
+
+    <!-- Heading -->
+    <h2 class="text-4xl font-bold text-center mb-6 text-transparent bg-clip-text 
+               bg-gradient-to-r from-indigo-500 via-cyan-400 to-blue-500 drop-shadow-lg">
+      Create Account
+    </h2>
+
+    <!-- Form -->
+    <form method="POST" enctype="multipart/form-data" class="space-y-5">
+      {{ form.hidden_tag() }}
+
+      <div>
+        <label for="name" class="block text-sm font-semibold text-gray-100 mb-1">Full Name</label>
+        {{ form.name(class="w-full p-3 rounded-lg bg-white/25 text-white placeholder-gray-200 border border-white/30 focus:ring-2 focus:ring-cyan-400 focus:outline-none", id="name") }}
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-semibold text-gray-100 mb-1">Email</label>
+        {{ form.email(class="w-full p-3 rounded-lg bg-white/25 text-white placeholder-gray-200 border border-white/30 focus:ring-2 focus:ring-cyan-400 focus:outline-none", id="email") }}
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-semibold text-gray-100 mb-1">Password</label>
+        {{ form.password(class="w-full p-3 rounded-lg bg-white/25 text-white placeholder-gray-200 border border-white/30 focus:ring-2 focus:ring-cyan-400 focus:outline-none", id="password") }}
+      </div>
+
+      <div>
+        <label for="aadhar" class="block text-sm font-semibold text-gray-100 mb-1">Aadhar Number</label>
+        {{ form.aadhar(class="w-full p-3 rounded-lg bg-white/25 text-white placeholder-gray-200 border border-white/30 focus:ring-2 focus:ring-cyan-400 focus:outline-none", id="aadhar") }}
+      </div>
+
+      <div>
+        <label for="role" class="block text-sm font-semibold text-gray-100 mb-1">Select Role</label>
+        {{ form.role(class="w-full p-3 rounded-lg bg-white/25 text-white placeholder-gray-200 border border-white/30 focus:ring-2 focus:ring-cyan-400 focus:outline-none", id="role") }}
+      </div>
+
+      <div>
+        <label for="skills" class="block text-sm font-semibold text-gray-100 mb-1">Skills (for Workers)</label>
+        {{ form.skills(class="w-full p-3 rounded-lg bg-white/25 text-white placeholder-gray-200 border border-white/30 focus:ring-2 focus:ring-cyan-400 focus:outline-none", id="skills") }}
+      </div>
+
+      <div>
+        <label for="govt_id_image" class="block text-sm font-semibold text-gray-100 mb-1">
+          Upload Govt ID / Aadhar Image
+          <span class="text-xs text-gray-300">(jpg, png — required for workers)</span>
+        </label>
+        {{ form.govt_id_image(class="w-full p-3 rounded-lg bg-white/25 text-white placeholder-gray-200 border border-white/30 focus:ring-2 focus:ring-cyan-400 focus:outline-none", id="govt_id_image") }}
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center pt-3">
+        <button type="submit"
+          class="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-indigo-500 to-cyan-400 hover:opacity-90 transform hover:scale-[1.02] transition-all duration-300">
+          Register
+        </button>
+      </div>
+    </form>
+
+    <!-- Note -->
+    <p class="mt-6 text-xs text-gray-300 text-center">
+      Uploaded Govt ID will be reviewed by admin before your account is approved.
+    </p>
+
+    <!-- Already have account -->
+    <div class="mt-4 text-center">
+      <a href="{{ url_for('login') }}" class="text-cyan-300 hover:text-cyan-100 transition">
+        Already have an account? Login
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- GSAP entrance animation -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  gsap.from(".glass-card", { 
+    duration: 1.2, 
+    y: 60, 
+    opacity: 0, 
+    ease: "power4.out" 
+  });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-container">
+  <div class="content-wrapper">
+
+    <h2 class="page-title">🛠️ Admin Dashboard</h2>
+    <p class="subtitle">Manage pending user approvals efficiently.</p>
+
+    {% if pending_users %}
+      <div class="users-list">
+        {% for user in pending_users %}
+          <div class="user-card">
+            <div class="user-info">
+              <h3>{{ user.name }}</h3>
+              <p><b>Role:</b> {{ user.role }}</p>
+              <p><b>Aadhar:</b> {{ user.aadhar }}</p>
+            </div>
+
+            <div class="actions">
+              <a href="/approve/{{ user.id }}" class="btn-approve">✅ Approve</a>
+              <a href="/reject/{{ user.id }}" class="btn-reject">❌ Reject</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="no-data">No pending approvals at the moment.</p>
+    {% endif %}
+
+  </div>
+</div>
+
+<style>
+/* === Layout === */
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 90vh;
+  color: #1f2937;
+}
+
+.content-wrapper {
+  width: 85%;
+  max-width: 900px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+  margin-top: 40px;
+}
+
+/* === Title & Subtitle === */
+.page-title {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #1e40af;
+  background: linear-gradient(to right, #2563eb, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #475569;
+  margin-bottom: 25px;
+}
+
+/* === User Cards === */
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.user-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+}
+
+.user-info h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.user-info p {
+  margin: 4px 0;
+  color: #374151;
+}
+
+/* === Buttons === */
+.actions {
+  margin-top: 10px;
+}
+
+.btn-approve, .btn-reject {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  margin-right: 10px;
+}
+
+.btn-approve {
+  background: linear-gradient(to right, #22c55e, #16a34a);
+}
+
+.btn-approve:hover {
+  background: linear-gradient(to right, #4ade80, #22c55e);
+}
+
+.btn-reject {
+  background: linear-gradient(to right, #ef4444, #dc2626);
+}
+
+.btn-reject:hover {
+  background: linear-gradient(to right, #f87171, #ef4444);
+}
+
+/* === No Data === */
+.no-data {
+  text-align: center;
+  color: #555;
+  font-size: 18px;
+}
+</style>
+
+{% endblock %}

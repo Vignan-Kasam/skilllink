@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ===== Light Theme Navbar Styling (Same as Dashboard) ===== -->
+<style>
+  nav {
+    background: linear-gradient(to right, #ffffff, #f8fafc) !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  nav .nav-container a {
+    color: #1e293b !important;
+    font-weight: 600;
+  }
+
+  nav .nav-container a:hover {
+    color: #2563eb !important;
+  }
+
+  nav .brand {
+    background: linear-gradient(to right, #2563eb, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ===== Form Section Styling (matches dashboard card style) ===== */
+  .edit-profile-container {
+    max-width: 600px;
+    margin: 120px auto;
+    background: #ffffffee;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 10;
+  }
+
+  .edit-profile-container h2 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #2563eb, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.8rem;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 6px;
+  }
+
+  input[type="text"],
+  textarea,
+  input[type="file"] {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+    background: #f9fafb;
+    color: #111827;
+    transition: all 0.3s ease;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.2);
+    outline: none;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background: linear-gradient(to right, #2563eb, #06b6d4);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  button[type="submit"]:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+</style>
+
+<!-- ===== Background Video (same as dashboard) ===== -->
+<video autoplay muted loop playsinline id="bg-video"
+  class="fixed top-0 left-0 w-full h-full object-cover z-0 opacity-55">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<!-- ===== Edit Profile Section ===== -->
+<div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
+  <div class="edit-profile-container">
+    <h2>✏️ Edit Profile</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+
+      <label>Profile Picture:</label>
+      <input type="file" name="profile_image" accept="image/*" class="input">
+
+      <label>Name:</label>
+      <input type="text" name="name" value="{{ current_user.name }}" required>
+
+      <label>Skills:</label>
+      <textarea name="skills" rows="2">{{ current_user.skills }}</textarea>
+
+      <label>Bio:</label>
+      <textarea name="bio" rows="3">{{ current_user.bio }}</textarea>
+
+      <label>Upload Govt ID Proof:</label>
+      <input type="file" name="govt_id_image">
+
+      <button type="submit">💾 Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- ===== GSAP Animation (smooth fade-in) ===== -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  gsap.from(".edit-profile-container", { 
+    duration: 1.2, 
+    y: 50, 
+    opacity: 0, 
+    ease: "power4.out"
+  });
+});
+</script>
+
+{% endblock %}

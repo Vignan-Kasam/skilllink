@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-container">
+    <div class="content-wrapper">
+
+        <h2 class="page-title">💼 Hire {{ worker.name }}</h2>
+        <p class="subtitle">Select a job below to assign this worker.</p>
+
+        {% if jobs %}
+        <form action="" method="get">
+            <div class="jobs-list">
+                {% for j in jobs %}
+                <div class="job-card">
+                    <div class="job-info">
+                        <h3>{{ j.title }}</h3>
+                    </div>
+                    <a class="btn-hire" href="{{ url_for('hire', worker_id=worker.id, job_id=j.id) }}">Hire</a>
+                </div>
+                {% endfor %}
+            </div>
+        </form>
+        {% else %}
+            <p class="no-data">No available jobs to assign.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* ✅ Page Layout */
+.page-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 90vh;
+    color: #222;
+}
+
+.content-wrapper {
+    width: 85%;
+    max-width: 750px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+    margin-top: 40px;
+}
+
+/* ✅ Title + Subtitle */
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+.subtitle {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+/* ✅ Job List */
+.jobs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ✅ Job Card */
+.job-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.job-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+}
+
+/* ✅ Hire Button */
+.btn-hire {
+    background: #27ae60;
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.btn-hire:hover {
+    background: #219150;
+}
+
+/* ✅ No Data */
+.no-data {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 🌌 Background Video */
+        #bgVideo {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.45) blur(3px);
+        }
+
+        .container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .search-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            padding: 10px 14px;
+            width: 340px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            color: #fff;
+        }
+
+        th {
+            background: rgba(0,0,0,0.55);
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .profile-pic {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #38bdf8;
+        }
+
+        .govt-id {
+            width: 70px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .view-btn {
+            background: linear-gradient(to right, #2563eb, #06b6d4);
+            padding: 7px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            color: #000;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .view-btn:hover {
+            background: linear-gradient(to right,  #2563eb, #06b6d4);
+            transform: translateY(-2px);
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- ✅ Background Video -->
+<video autoplay muted loop id="bgVideo">
+  <source src="{{ url_for('static', filename='videos/skilllink_bg.mp4') }}" type="video/mp4">
+</video>
+
+<div class="container">
+
+<h1>All Registered Users</h1>
+
+<div class="search-box">
+    <input type="text" id="search" placeholder="Search by name or phone..." onkeyup="searchTable()">
+</div>
+
+<table id="usersTable">
+    <tr>
+        <th>ID</th>
+        <th>Profile</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Govt ID</th>
+        <th>Action</th>
+    </tr>
+
+    {% for u in users %}
+    <tr>
+        <td>{{ u.id }}</td>
+
+        <td>
+            <img class="profile-pic"
+                 src="{{ url_for('static', filename='profile_pics/' + (u.profile_image or 'default_profile.png')) }}"
+                 alt="Profile Picture">
+        </td>
+
+        <td>{{ u.name }}</td>
+        <td>{{ u.phone }}</td>
+
+        <td>
+            {% if u.govt_id_image %}
+                <img class="govt-id"
+                     src="{{ url_for('static', filename='govt_ids/' + u.govt_id_image) }}"
+                     alt="Govt ID">
+            {% else %}
+                ❌ No ID
+            {% endif %}
+        </td>
+
+        <td>
+            <a href="/profile/{{ u.id }}" class="view-btn">View</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
+
+<script>
+function searchTable() {
+    let filter = document.getElementById("search").value.toLowerCase();
+    let rows = document.querySelectorAll("#usersTable tr");
+
+    rows.forEach((row, index) => {
+        if (index === 0) return;
+        row.style.display = row.innerText.toLowerCase().includes(filter) ? "" : "none";
+    });
+}
+</script>
+
+</body>
+</html>
